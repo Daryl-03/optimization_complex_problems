@@ -24,7 +24,9 @@ Instance *read_instance(const char *path) {
     for (int i = 0; i < instance->nombreDeJobs; i++) {
         fscanf(fptr, "%d", &instance->jobs[i].id);
         instance->jobs[i].durations = malloc(instance->nombreDeMachines * sizeof(int));
-        fscanf(fptr, "%ld", &dump);
+        int tempsFinAuPlusTot = 0;
+        fscanf(fptr, "%d", &tempsFinAuPlusTot);
+        instance->jobs[i].finAuPlusTot = tempsFinAuPlusTot;
         for (int j = 0; j < instance->nombreDeMachines; j++) {
             fscanf(fptr, "%d", &instance->jobs[i].durations[j]);
         }
@@ -51,6 +53,7 @@ void afficher_instance(Instance instance) {
         for (int j = 0; j < instance.nombreDeMachines; j++) {
             printf("%d ", instance.jobs[i].durations[j]);
         }
+        printf("\t Fin au plus tot: %d", instance.jobs[i].finAuPlusTot);
         printf("\n");
     }
 }
@@ -132,6 +135,76 @@ double cout_CMax(Instance *instance, int *solution) {
                                   memorization);
     free_memoization(memorization, instance->nombreDeMachines);
     return cout;
+}
+
+double cout_T(Instance *instance, int *solution) {
+    if (solution == NULL) {
+        exit(0);
+    }
+    double **memorization = create_memorization(instance);
+
+    for (int i = 0; i < instance->nombreDeMachines; i++) {
+        for (int j = 0; j < instance->nombreDeJobs; j++) {
+            int jobId = solution[j];
+            if (i == 0 && j == 0) {
+                memorization[i][j] = instance->jobs[jobId].durations[i];
+            } else if (i == 0) {
+                memorization[i][j] = memorization[i][j - 1] + instance->jobs[jobId].durations[i];
+            } else if (j == 0) {
+                memorization[i][j] = memorization[i - 1][j] + instance->jobs[jobId].durations[i];
+            } else {
+                memorization[i][j] =
+                        instance->jobs[jobId].durations[i] + fmax(memorization[i - 1][j], memorization[i][j - 1]);
+            }
+
+        }
+    }
+
+    double sommeRetards = 0;
+    for (int i = 0; i < instance->nombreDeJobs; ++i) {
+        int jobId = solution[i];
+        sommeRetards += memorization[instance->nombreDeMachines - 1][i] - instance->jobs[jobId].finAuPlusTot;
+    }
+    free_memoization(memorization, instance->nombreDeMachines);
+    return sommeRetards;
+}
+
+Cout eval_mo(Instance *instance, int *solution) {
+    if (solution == NULL) {
+        exit(0);
+    }
+    double **memorization = create_memorization(instance);
+
+    for (int i = 0; i < instance->nombreDeMachines; i++) {
+        for (int j = 0; j < instance->nombreDeJobs; j++) {
+            int jobId = solution[j];
+            if (i == 0 && j == 0) {
+                memorization[i][j] = instance->jobs[jobId].durations[i];
+            } else if (i == 0) {
+                memorization[i][j] = memorization[i][j - 1] + instance->jobs[jobId].durations[i];
+            } else if (j == 0) {
+                memorization[i][j] = memorization[i - 1][j] + instance->jobs[jobId].durations[i];
+            } else {
+                memorization[i][j] =
+                        instance->jobs[jobId].durations[i] + fmax(memorization[i - 1][j], memorization[i][j - 1]);
+            }
+
+        }
+    }
+
+    double cout = memorization[instance->nombreDeMachines - 1][instance->nombreDeJobs - 1];
+    double sommeRetards = 0;
+    for (int i = 0; i < instance->nombreDeJobs; ++i) {
+        int jobId = solution[i];
+        double resultat = memorization[instance->nombreDeMachines - 1][i] - instance->jobs[jobId].finAuPlusTot;
+        sommeRetards += (resultat < 0) ? 0 : resultat;
+    }
+
+    free_memoization(memorization, instance->nombreDeMachines);
+    Cout coutFinal;
+    coutFinal.cmax = cout;
+    coutFinal.ct = sommeRetards;
+    return coutFinal;
 }
 
 double **create_memorization(const Instance *instance) {

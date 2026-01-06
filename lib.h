@@ -12,11 +12,10 @@
 #include "math.h"
 #include "stdbool.h"
 
-
-
 typedef struct job {
     int id;
     int* durations;
+    int finAuPlusTot;
 } Job;
 
 typedef struct instance {
@@ -36,6 +35,11 @@ typedef enum operation{
     INSERTION
 } Operation;
 
+typedef struct cout{
+    double cmax;
+    double ct;
+} Cout;
+
 Instance* read_instance(const char* path);
 
 void free_instance(Instance* instance);
@@ -49,6 +53,8 @@ void swap_int (int *a, int *b);
 void shuffle_array(int* array, int size);
 
 double cout_CMax(Instance* instance, int* solution);
+double cout_T(Instance* instance, int* solution);
+Cout eval_mo(Instance* instance, int* solution);
 
 double temps_fin_tache(Instance* instance, int* solution, int jobIndex, int machineIndex, double** memorization);
 
