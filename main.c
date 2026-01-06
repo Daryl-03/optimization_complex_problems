@@ -8,7 +8,7 @@ Instance *getInstance() {
     char *fullPath = malloc(strlen(basePath) + 30 + 1);
     strcpy(fullPath, basePath);
 
-    Instance *instance = read_instance(strcat(fullPath, "50_10_01.txt"));
+    Instance *instance = read_instance(strcat(fullPath, "50_20_01.txt"));
     free(fullPath);
     return instance;
 }
