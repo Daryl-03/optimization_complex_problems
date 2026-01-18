@@ -56,9 +56,9 @@ build CMakeFiles/tp1.dir/main.c.obj: C_COMPILER__tp1_unscanned_Debug C$:/Users/N
   OBJECT_DIR = CMakeFiles\tp1.dir
   OBJECT_FILE_DIR = CMakeFiles\tp1.dir
 
-build CMakeFiles/tp1.dir/utils.c.obj: C_COMPILER__tp1_unscanned_Debug C$:/Users/Naku/Desktop/Naku_desktop/EILCO/ING3/problemes_complexes/tp1/utils.c || cmake_object_order_depends_target_tp1
+build CMakeFiles/tp1.dir/monovar.c.obj: C_COMPILER__tp1_unscanned_Debug C$:/Users/Naku/Desktop/Naku_desktop/EILCO/ING3/problemes_complexes/tp1/monovar.c || cmake_object_order_depends_target_tp1
   CONFIG = Debug
-  DEP_FILE = CMakeFiles\tp1.dir\utils.c.obj.d
+  DEP_FILE = CMakeFiles\tp1.dir\monovar.c.obj.d
   FLAGS = -g -std=gnu11 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\tp1.dir
   OBJECT_FILE_DIR = CMakeFiles\tp1.dir
@@ -66,6 +66,20 @@ build CMakeFiles/tp1.dir/utils.c.obj: C_COMPILER__tp1_unscanned_Debug C$:/Users/
 build CMakeFiles/tp1.dir/test.c.obj: C_COMPILER__tp1_unscanned_Debug C$:/Users/Naku/Desktop/Naku_desktop/EILCO/ING3/problemes_complexes/tp1/test.c || cmake_object_order_depends_target_tp1
   CONFIG = Debug
   DEP_FILE = CMakeFiles\tp1.dir\test.c.obj.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\tp1.dir
+  OBJECT_FILE_DIR = CMakeFiles\tp1.dir
+
+build CMakeFiles/tp1.dir/multivar.c.obj: C_COMPILER__tp1_unscanned_Debug C$:/Users/Naku/Desktop/Naku_desktop/EILCO/ING3/problemes_complexes/tp1/multivar.c || cmake_object_order_depends_target_tp1
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\tp1.dir\multivar.c.obj.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\tp1.dir
+  OBJECT_FILE_DIR = CMakeFiles\tp1.dir
+
+build CMakeFiles/tp1.dir/utils.c.obj: C_COMPILER__tp1_unscanned_Debug C$:/Users/Naku/Desktop/Naku_desktop/EILCO/ING3/problemes_complexes/tp1/utils.c || cmake_object_order_depends_target_tp1
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\tp1.dir\utils.c.obj.d
   FLAGS = -g -std=gnu11 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\tp1.dir
   OBJECT_FILE_DIR = CMakeFiles\tp1.dir
@@ -78,7 +92,7 @@ build CMakeFiles/tp1.dir/test.c.obj: C_COMPILER__tp1_unscanned_Debug C$:/Users/N
 #############################################
 # Link the executable tp1.exe
 
-build tp1.exe: C_EXECUTABLE_LINKER__tp1_Debug CMakeFiles/tp1.dir/main.c.obj CMakeFiles/tp1.dir/utils.c.obj CMakeFiles/tp1.dir/test.c.obj
+build tp1.exe: C_EXECUTABLE_LINKER__tp1_Debug CMakeFiles/tp1.dir/main.c.obj CMakeFiles/tp1.dir/monovar.c.obj CMakeFiles/tp1.dir/test.c.obj CMakeFiles/tp1.dir/multivar.c.obj CMakeFiles/tp1.dir/utils.c.obj
   CONFIG = Debug
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "lib.h"
 #include "string.h"
+#include "multivar.h"
 
 Instance *getInstance() {
     const char *basePath = "C:\\Users\\Naku\\Desktop\\Naku_desktop\\EILCO\\ING3\\problemes_complexes\\tp1\\instances\\";
@@ -8,7 +9,7 @@ Instance *getInstance() {
     char *fullPath = malloc(strlen(basePath) + 30 + 1);
     strcpy(fullPath, basePath);
 
-    Instance *instance = read_instance(strcat(fullPath, "50_20_01.txt"));
+    Instance *instance = read_instance(strcat(fullPath, "7_5_01.txt"));
     free(fullPath);
     return instance;
 }
@@ -33,7 +34,7 @@ int launch_Optimization() {
     Solution solution_marche_echange = marche_aleatoire_op(instance, nombre_iterations, ECHANGE);
 
     printf("\n");
-    printf("%f insertion vs %f echange\n", solution_marche_insertion.cmax, solution_marche_echange.cmax);
+    printf("%f insertion vs %f echange\n", solution_marche_insertion.cout.cmax, solution_marche_echange.cout.cmax);
 
     printf("Climber first \n");
     Solution solution_climb_first_ins = climber_first(instance, INSERTION);
@@ -71,7 +72,41 @@ int main(void) {
     solution.jobOrder = a;
     solution.nombreDeJobs = 20;
 
-    Cout c = eval_mo(instance, a);
-    printf("les valeurs de cout : %f et %f", c.cmax, c.ct);
+    int nombreDeSolutions = 5;
+    Solution solutions[nombreDeSolutions];
+    for(int i =0; i<5; i++){
+        solutions[i].nombreDeJobs = instance->nombreDeJobs;
+    }
+    solutions[0].jobOrder = (int[]){ 5, 6, 4, 1, 3, 2, 0 };
+    solutions[1].jobOrder = (int[]){ 5, 2, 3, 0, 6, 4, 1 };
+    solutions[2].jobOrder = (int[]){ 2, 5, 4, 3, 0, 6, 1 };
+    solutions[3].jobOrder = (int[]){ 2, 4, 5, 3, 0, 1, 6 };
+    solutions[4].jobOrder = (int[]){ 6, 4, 1, 5, 2, 3, 0 };
+
+
+    //    Cout c = eval_mo(instance, solutionA);
+    //    printf("les valeurs de cout : %f et %f", c.cmax, c.ct);
+
+//    printf("filtrage offline des solutions\n");
+//    int nombreSolutionsNonDominees = 0;
+//    Solution* result = filtrage_offline( instance, solutions, nombreDeSolutions, &nombreSolutionsNonDominees);
+//
+//    //  Les solutions apres filtrage offline :
+//    printf("Les solutions apres filtrage offline :\n");
+//    printf("Nombre de solutions : %d\n", nombreSolutionsNonDominees);
+//
+//    for(int i =0; i< nombreSolutionsNonDominees; i++){
+//        afficher_solution(result[i]);
+//    }
+
+//    Solution* result = approche_scalaire(instance, (ScalarizationParams){INSERTION, 0.01}, &nombreDeSolutions);
+    Solution* result = approche_pareto(instance, (ParetoParams){INSERTION, 10000}, &nombreDeSolutions);
+    //  Les solutions apres filtrage offline :
+    printf("Les solutions apres filtrage offline :\n");
+    printf("Nombre de solutions : %d\n", nombreDeSolutions);
+
+    for(int i =0; i< nombreDeSolutions; i++){
+        afficher_solution(result[i]);
+    }
     return 0;
 }

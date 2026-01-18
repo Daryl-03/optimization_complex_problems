@@ -24,9 +24,14 @@ typedef struct instance {
     Job* jobs;
 } Instance;
 
+typedef struct cout{
+    double cmax;
+    double ct;
+} Cout;
+
 typedef struct solution {
     int* jobOrder;
-    double cmax;
+    Cout cout;
     int nombreDeJobs;
 } Solution;
 
@@ -35,10 +40,6 @@ typedef enum operation{
     INSERTION
 } Operation;
 
-typedef struct cout{
-    double cmax;
-    double ct;
-} Cout;
 
 Instance* read_instance(const char* path);
 
@@ -70,6 +71,7 @@ Solution creer_solution(int nombreDeJobs);
 
 Solution afficher_solution(Solution solution);
 
+double cout_Cmax_iter(Instance *instance, int *solution);
 Solution climber_first(Instance *instance, Operation op);
 Solution climber_best(Instance *instance, Operation op);
 Solution algo_perso(Instance *instance, Operation op, double max_iter);

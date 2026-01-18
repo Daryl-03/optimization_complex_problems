@@ -5,5 +5,9 @@ set(CMAKE_C_STANDARD 11)
 
 add_executable(tp1 main.c
         lib.h
+        monovar.c
+        test.c
+        multivar.c
+        multivar.h
         utils.c
-        test.c)
+        utils.h)
