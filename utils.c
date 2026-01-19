@@ -281,7 +281,7 @@ Solution marche_aleatoire_op(Instance *instance, double max_iterations, Operatio
     return best_solution;
 }
 
-Solution climber_first(Instance *instance, Operation op) {
+Solution climber_first(Instance *instance, Operation op, int* nb_evaluations) {
     Solution solution_courante;
     solution_courante.jobOrder = generate_random_solution(instance->nombreDeJobs);
     solution_courante.cmax = cout_CMax(instance, solution_courante.jobOrder);
@@ -305,6 +305,7 @@ Solution climber_first(Instance *instance, Operation op) {
             int i = rand() % remaining_neighbours;
             remaining_neighbours--;
             double cout = cout_Cmax_iter(instance, voisins[i].jobOrder);
+            *nb_evaluations += 1;
             if (cout < solution_courante.cmax) {
                 memcpy(solution_courante.jobOrder, voisins[i].jobOrder, instance->nombreDeJobs * sizeof(int));
 
@@ -328,7 +329,8 @@ Solution climber_first(Instance *instance, Operation op) {
     return solution_courante;
 }
 
-Solution climber_best(Instance *instance, Operation op) {
+Solution climber_best(Instance *instance, Operation op, int* nb_evaluations) {
+    *nb_evaluations = 0;
     Solution solution_courante;
     solution_courante.jobOrder = generate_random_solution(instance->nombreDeJobs);
     solution_courante.cmax = cout_CMax(instance, solution_courante.jobOrder);
@@ -350,6 +352,7 @@ Solution climber_best(Instance *instance, Operation op) {
 
         for (int i = 0; i < nombreDeVoisins; i++) {
             double cout = cout_Cmax_iter(instance, voisins[i].jobOrder);
+            *nb_evaluations += 1;
             if (cout < solution_courante.cmax) {
                 memcpy(solution_courante.jobOrder, voisins[i].jobOrder, instance->nombreDeJobs * sizeof(int));
 
@@ -363,7 +366,16 @@ Solution climber_best(Instance *instance, Operation op) {
     return solution_courante;
 }
 
-Solution algo_perso(Instance *instance, Operation op, double max_iter) {
+/**
+ * Algorithme personnel : Climber best avec une évasion de minimum local
+ * @param instance
+ * @param op
+ * @param max_iter
+ * @param nb_evaluations
+ * @return
+ */
+Solution algo_perso(Instance *instance, Operation op, double max_iter, int* nb_evaluations) {
+    *nb_evaluations = 0;
     Solution solution_courante;
     solution_courante.jobOrder = generate_random_solution(instance->nombreDeJobs);
     solution_courante.cmax = cout_CMax(instance, solution_courante.jobOrder);
@@ -385,6 +397,7 @@ Solution algo_perso(Instance *instance, Operation op, double max_iter) {
 
         for (int i = 0; i < nombreDeVoisins; i++) {
             double cout = cout_Cmax_iter(instance, voisins[i].jobOrder);
+            *nb_evaluations += 1;
             if (cout < solution_courante.cmax) {
                 memcpy(solution_courante.jobOrder, voisins[i].jobOrder, instance->nombreDeJobs * sizeof(int));
 
@@ -393,11 +406,36 @@ Solution algo_perso(Instance *instance, Operation op, double max_iter) {
             }
         }
         free_tab_solutions(voisins, nombreDeVoisins);
+
+        if(!notStuck){
+            for (int i = 0; i < 2; ++i) {
+                int from = (rand() % instance->nombreDeJobs) + 1;
+                int to;
+                do {
+                    to = (rand() % instance->nombreDeJobs) + 1;
+                } while (to == from);
+                switch (op) {
+                    case ECHANGE:
+                        inserer(&solution_courante, from, to);
+                        break;
+                    case INSERTION:
+                        echange(solution_courante.jobOrder, from, to);
+                        break;
+                }
+            }
+        }
     } while (max_iter-- > 0);
 
     return solution_courante;
 }
 
+/**
+ * Génère toutes les solutions voisines en effectuant des échanges.
+ * @param solution
+ * @param nombreDeJobs
+ * @param nombreDeVoisins
+ * @return
+ */
 Solution *voisins_echange(int *solution, int nombreDeJobs, int *nombreDeVoisins) {
     *nombreDeVoisins = (nombreDeJobs * (nombreDeJobs - 1)) / 2;
     Solution *voisins = malloc((*nombreDeVoisins) * sizeof(Solution));
@@ -416,7 +454,15 @@ Solution *voisins_echange(int *solution, int nombreDeJobs, int *nombreDeVoisins)
     return voisins;
 }
 
+/**
+ * Génère toutes les solutions voisines par opération d'échange.
+ * @param solution
+ * @param nombreDeJobs
+ * @param nombreDeVoisins
+ * @return
+ */
 Solution *voisins_insertion(int *solution, int nombreDeJobs, int *nombreDeVoisins) {
+//    nombre d'operations d'insertion possibles : n*(n-1) - (n-1)
     *nombreDeVoisins = nombreDeJobs * (nombreDeJobs - 1) - (nombreDeJobs - 1);
     Solution *voisins = malloc((*nombreDeVoisins) * sizeof(Solution));
     int index = 0;

@@ -64,9 +64,9 @@ Solution creer_solution(int nombreDeJobs);
 
 Solution afficher_solution(Solution solution);
 
-Solution climber_first(Instance *instance, Operation op);
-Solution climber_best(Instance *instance, Operation op);
-Solution algo_perso(Instance *instance, Operation op, double max_iter);
+Solution climber_first(Instance *instance, Operation op, int* nb_evaluations);
+Solution climber_best(Instance *instance, Operation op, int* nb_evaluations);
+Solution algo_perso(Instance *instance, Operation op, double max_iter, int* nb_evaluations);
 
 
 Solution * voisins_echange(int* solution, int nombreDeJobs, int* nombreDeVoisins);
