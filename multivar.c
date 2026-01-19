@@ -203,7 +203,11 @@ Solution *approche_pareto(Instance *instance, ParetoParams params, int *size) {
     initial_solution.cout = eval_mo(instance, initial_solution.jobOrder);
     initial_solution.nombreDeJobs = instance->nombreDeJobs;
 
+    FILE *logFile = fopen("solutions_pareto.dat", "w");
+
+
     ajouter_solution(archive, initial_solution);
+    fprintf(logFile, "%f %f %f\n", initial_solution.cout.cmax, initial_solution.cout.ct, 0.0);
 
     for (int i = 0; i < params.max_steps; ++i) {
         Solution active_solution;
@@ -233,12 +237,12 @@ Solution *approche_pareto(Instance *instance, ParetoParams params, int *size) {
                 break;
         }
 
-
-        for (int i = 0; i < nombreDeVoisins; i++) {
-            voisins[i].cout = eval_mo(instance, voisins[i].jobOrder);
-            if (!est_dominee_par_archive(archive, voisins[i])) {
-                supprimer_dominees(archive, voisins[i]);
-                ajouter_solution(archive, voisins[i]);
+        for (int j = 0; j < nombreDeVoisins; j++) {
+            voisins[j].cout = eval_mo(instance, voisins[j].jobOrder);
+            if (!est_dominee_par_archive(archive, voisins[j])) {
+                supprimer_dominees(archive, voisins[j]);
+                ajouter_solution(archive, voisins[j]);
+                fprintf(logFile, "%f %f %f\n", voisins[j].cout.cmax, voisins[j].cout.ct, 0.0);
             }
         }
         free_tab_solutions(voisins, nombreDeVoisins);
@@ -251,8 +255,8 @@ Solution *approche_pareto(Instance *instance, ParetoParams params, int *size) {
     int index = 0;
     while (current) {
         nonDominatedSolutions[index++] = current->solution;
+        fprintf(logFile, "%f %f %f\n", current->solution.cout.cmax, current->solution.cout.ct, 1.0);
         current = current->next;
-
     }
 
     current = archive->head;
@@ -262,6 +266,35 @@ Solution *approche_pareto(Instance *instance, ParetoParams params, int *size) {
         free(temp);
     }
     free(archive);
+
+    fclose(logFile);
+
+    const char *gnuplot_cmd =
+            "gnuplot -p -e \""
+            "set terminal wxt;"
+            "set grid; "
+            "set xlabel 'Cmax (Makespan)'; "
+            "set ylabel 'CT (Total Completion Time)'; "
+            "set title 'Analyse du Front de Pareto'; "
+
+            // Amélioration du Padding : 10% de marge sur chaque côté
+            "set offsets graph 0.1, 0.1, 0.1, 0.1; "
+
+            // Force Gnuplot à ne pas coller les axes aux données
+            "set autoscale; "
+
+            // Légende à l'extérieur pour ne pas cacher les points
+            "set key outside right vertical; "
+
+            // Le PLOT :
+            // 1. On dessine le BLEU (Flag 1) en premier, petit (ps 0.6)
+            "plot 'solutions_pareto.dat' using ($3==0 ? $1 : 1/0):($3==0 ? $2 : 1/0) "
+            "with points pt 7 ps 0.6 lc rgb '#4060A0C0' title 'Solutions explorees', "
+
+            // 2. On dessine le ROUGE (Flag 0) par-dessus, gros (ps 1.8)
+            "'solutions_pareto.dat' using ($3==1 ? $1 : 1/0):($3==1 ? $2 : 1/0) "
+            "with points pt 7 ps 0.8 lc rgb 'red' title 'Front de Pareto final'\"";
+    system(gnuplot_cmd);
 
     return nonDominatedSolutions;
 }

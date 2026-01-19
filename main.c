@@ -9,7 +9,7 @@ Instance *getInstance() {
     char *fullPath = malloc(strlen(basePath) + 30 + 1);
     strcpy(fullPath, basePath);
 
-    Instance *instance = read_instance(strcat(fullPath, "7_5_01.txt"));
+    Instance *instance = read_instance(strcat(fullPath, "50_20_01.txt"));
     free(fullPath);
     return instance;
 }
@@ -100,7 +100,7 @@ int main(void) {
 //    }
 
 //    Solution* result = approche_scalaire(instance, (ScalarizationParams){INSERTION, 0.01}, &nombreDeSolutions);
-    Solution* result = approche_pareto(instance, (ParetoParams){INSERTION, 10000}, &nombreDeSolutions);
+    Solution* result = approche_pareto(instance, (ParetoParams){ECHANGE, 100}, &nombreDeSolutions);
     //  Les solutions apres filtrage offline :
     printf("Les solutions apres filtrage offline :\n");
     printf("Nombre de solutions : %d\n", nombreDeSolutions);
