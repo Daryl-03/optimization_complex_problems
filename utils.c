@@ -300,17 +300,27 @@ Solution climber_first(Instance *instance, Operation op) {
                 break;
         }
 
-        for (int i = 0; i < nombreDeVoisins; i++) {
+        int remaining_neighbours = nombreDeVoisins;
+        while(remaining_neighbours > 0) {
+            int i = rand() % remaining_neighbours;
+            remaining_neighbours--;
             double cout = cout_Cmax_iter(instance, voisins[i].jobOrder);
             if (cout < solution_courante.cmax) {
-                memcpy(solution_courante.jobOrder, solution_courante.jobOrder, instance->nombreDeJobs * sizeof(int));
+                memcpy(solution_courante.jobOrder, voisins[i].jobOrder, instance->nombreDeJobs * sizeof(int));
 
                 solution_courante.cmax = cout;
                 break;
             }
-            if (i == nombreDeVoisins - 1) {
+
+            if(remaining_neighbours == 0){
                 notStuck = false;
+                break;
             }
+
+            Solution temp = voisins[i];
+            voisins[i] = voisins[remaining_neighbours];
+            voisins[remaining_neighbours] = temp;
+
         }
         free_tab_solutions(voisins, nombreDeVoisins);
     } while (notStuck);
@@ -341,7 +351,7 @@ Solution climber_best(Instance *instance, Operation op) {
         for (int i = 0; i < nombreDeVoisins; i++) {
             double cout = cout_Cmax_iter(instance, voisins[i].jobOrder);
             if (cout < solution_courante.cmax) {
-                memcpy(solution_courante.jobOrder, solution_courante.jobOrder, instance->nombreDeJobs * sizeof(int));
+                memcpy(solution_courante.jobOrder, voisins[i].jobOrder, instance->nombreDeJobs * sizeof(int));
 
                 solution_courante.cmax = cout;
                 notStuck = true;
@@ -376,14 +386,14 @@ Solution algo_perso(Instance *instance, Operation op, double max_iter) {
         for (int i = 0; i < nombreDeVoisins; i++) {
             double cout = cout_Cmax_iter(instance, voisins[i].jobOrder);
             if (cout < solution_courante.cmax) {
-                memcpy(solution_courante.jobOrder, solution_courante.jobOrder, instance->nombreDeJobs * sizeof(int));
+                memcpy(solution_courante.jobOrder, voisins[i].jobOrder, instance->nombreDeJobs * sizeof(int));
 
                 solution_courante.cmax = cout;
                 notStuck = true;
             }
         }
         free_tab_solutions(voisins, nombreDeVoisins);
-    } while (notStuck);
+    } while (max_iter-- > 0);
 
     return solution_courante;
 }

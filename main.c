@@ -37,7 +37,9 @@ int launch_Optimization(){
 
     printf("Climber first \n");
     Solution solution_climb_first_ins = climber_first(instance, INSERTION);
+    afficher_solution(solution_climb_first_ins);
     Solution solution_climb_first_ech = climber_first(instance, ECHANGE);
+    afficher_solution(solution_climb_first_ech);
     printf("Apres climb first insertion :\n");
 
 
