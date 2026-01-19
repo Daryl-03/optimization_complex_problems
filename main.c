@@ -31,11 +31,7 @@ Instance *getInstance() {
     return getInstanceByName("20_10_01.txt");
 }
 
-// Fonction de test pour la Question 9
-// Teste les 4 algorithmes (marche aléatoire, climber_first, climber_best, algo_perso)
-// avec les 2 voisinages (INSERTION, ECHANGE) = 8 versions
-// k = nombre d'exécutions par méthode
-// n = nombre de solutions évaluées pour marche_aleatoire
+
 void test_algorithmes(Instance *instance, int k, double n) {
     printf("\n=== Test des algorithmes ===\n");
     printf("Instance: %d jobs, %d machines\n", instance->nombreDeJobs, instance->nombreDeMachines);

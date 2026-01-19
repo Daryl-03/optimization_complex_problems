@@ -462,7 +462,7 @@ Solution *voisins_echange(int *solution, int nombreDeJobs, int *nombreDeVoisins)
  * @return
  */
 Solution *voisins_insertion(int *solution, int nombreDeJobs, int *nombreDeVoisins) {
-//    nombre d'operations d'insertion possibles : n*(n-1) - (n-1)
+//  nombre d'operations d'insertion possibles : n*(n-1) - (n-1)
     *nombreDeVoisins = nombreDeJobs * (nombreDeJobs - 1) - (nombreDeJobs - 1);
     Solution *voisins = malloc((*nombreDeVoisins) * sizeof(Solution));
     int index = 0;
