@@ -32,3 +32,15 @@ bool exporter_solutions_gnuplot_flag(Solution *solutions, bool *dominated, int n
     fclose(f);
     return true;
 }
+
+
+Instance *getInstance() {
+    const char *basePath = "C:\\Users\\Naku\\Desktop\\Naku_desktop\\EILCO\\ING3\\problemes_complexes\\tp1\\instances\\";
+
+    char *fullPath = malloc(strlen(basePath) + 30 + 1);
+    strcpy(fullPath, basePath);
+
+    Instance *instance = read_instance(strcat(fullPath, "20_10_01.txt"));
+    free(fullPath);
+    return instance;
+}

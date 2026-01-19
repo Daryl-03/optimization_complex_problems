@@ -10,4 +10,6 @@ add_executable(tp1 main.c
         multivar.c
         multivar.h
         utils.c
-        utils.h)
+        utils.h
+        analyse.c
+        analyse.h)

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/analyse.h">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/analyse.h" />
+              <option name="originalContent" value="//&#10;// Created by Naku on 19/01/2026.&#10;//&#10;&#10;#ifndef TP1_ANALYSE_H&#10;#define TP1_ANALYSE_H&#10;&#10;#include &quot;multivar.h&quot;&#10;&#10;Instance *getInstance();&#10;&#10;void question5();&#10;void question6();&#10;void question7();&#10;#endif //TP1_ANALYSE_H&#10;" />
+              <option name="updatedContent" value="//&#10;// Created by Naku on 19/01/2026.&#10;//&#10;&#10;#ifndef TP1_ANALYSE_H&#10;#define TP1_ANALYSE_H&#10;&#10;#include &quot;multivar.h&quot;&#10;&#10;Instance *getInstance();&#10;&#10;void question5();&#10;void question6();&#10;void question7();&#10;#endif //TP1_ANALYSE_H&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

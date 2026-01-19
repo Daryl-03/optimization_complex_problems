@@ -10,4 +10,5 @@
 
 bool exporter_solutions_gnuplot(Solution *solutions, int nombreSolutions, const char *path);
 bool exporter_solutions_gnuplot_flag(Solution *solutions, bool *dominated, int n, const char *filename);
+Instance *getInstance();
 #endif //TP1_UTILS_H
