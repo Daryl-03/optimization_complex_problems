@@ -427,40 +427,6 @@ Solution climber_best(Instance *instance, Operation op) {
     return solution_courante;
 }
 
-Solution algo_perso(Instance *instance, Operation op, double max_iter) {
-    Solution solution_courante;
-    solution_courante.jobOrder = generate_random_solution(instance->nombreDeJobs);
-    solution_courante.cout.cmax = cout_CMax(instance, solution_courante.jobOrder);
-    solution_courante.nombreDeJobs = instance->nombreDeJobs;
-    bool notStuck = true;
-
-    do {
-        notStuck = false;
-        Solution *voisins;
-        int nombreDeVoisins;
-        switch (op) {
-            case ECHANGE:
-                voisins = voisins_echange(solution_courante.jobOrder, instance->nombreDeJobs, &nombreDeVoisins);
-                break;
-            case INSERTION:
-                voisins = voisins_insertion(solution_courante.jobOrder, instance->nombreDeJobs, &nombreDeVoisins);
-                break;
-        }
-
-        for (int i = 0; i < nombreDeVoisins; i++) {
-            double cout = cout_Cmax_iter(instance, voisins[i].jobOrder);
-            if (cout < solution_courante.cout.cmax) {
-                memcpy(solution_courante.jobOrder, solution_courante.jobOrder, instance->nombreDeJobs * sizeof(int));
-
-                solution_courante.cout.cmax = cout;
-                notStuck = true;
-            }
-        }
-        free_tab_solutions(voisins, nombreDeVoisins);
-    } while (notStuck);
-
-    return solution_courante;
-}
 
 Solution *voisins_echange(int *solution, int nombreDeJobs, int *nombreDeVoisins) {
     *nombreDeVoisins = (nombreDeJobs * (nombreDeJobs - 1)) / 2;

@@ -269,6 +269,7 @@ Solution *approche_pareto(Instance *instance, ParetoParams params, int *size) {
     free(initial_solution.jobOrder);
 
     for (int i = 0; i < params.max_steps; ++i) {
+        printf("iteration %d/%d - Archive size: %d\n", i + 1, params.max_steps, archive->size);
         Solution active_solution;
 
         Node *current = archive->head;
@@ -305,6 +306,7 @@ Solution *approche_pareto(Instance *instance, ParetoParams params, int *size) {
             }
         }
         free_tab_solutions(voisins, nombreDeVoisins);
+        printf("fin iteration %d/%d - Archive size: %d\n", i + 1, params.max_steps, archive->size);
     }
 
     // exportation des solutions non dominées

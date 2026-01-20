@@ -61,10 +61,10 @@ int main(void) {
 //    question7();
 
     // Question 8 : Approche Pareto sur 3 instances
-//    question8();
+    question8();
 
     // Questions 10 & 11 : Analyse comparative avec hypervolume
-    question10_11();
+//    question10_11();
 
     return 0;
 }

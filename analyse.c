@@ -337,7 +337,7 @@ void question10_11() {
     printf("    QUESTIONS 10 & 11 : ANALYSE COMPARATIVE\n");
     printf("=============================================================\n\n");
 
-    Instance *instance = getInstanceByName("7_5_01.txt");
+    Instance *instance = getInstanceByName("50_20_01.txt");
     if (instance == NULL) {
         printf("Erreur: impossible de charger l'instance.\n");
         return;
@@ -413,8 +413,9 @@ void question10_11() {
     printf("Hypervolume moyen : %.2f\n", moyenne_scalaire);
     printf("Ecart-type        : %.2f\n\n", ecart_type_scalaire);
 
+    int max_iterations = 2000;
     printf("=============================================================\n");
-    printf("         APPROCHE PARETO (10 executions)\n");
+    printf("         APPROCHE PARETO (10 executions) %d max iter\n", max_iterations);
     printf("=============================================================\n");
     printf("%-5s | %-15s | %-15s | %-15s\n", "Exec", "Solutions ND", "Hypervolume", "Temps (ms)");
     printf("-------------------------------------------------------------\n");
@@ -425,7 +426,7 @@ void question10_11() {
         int nombreSolutionsND = 0;
 
         Solution *result = approche_pareto(instance,
-            (ParetoParams){INSERTION, 100}, &nombreSolutionsND);
+            (ParetoParams){INSERTION, max_iterations}, &nombreSolutionsND);
 
         clock_t stop = clock();
         double temps_ms = (double)(stop - start) * 1000.0 / CLOCKS_PER_SEC;
@@ -504,7 +505,7 @@ void question10_11() {
         "set grid; "
         "set xlabel 'Cmax'; "
         "set ylabel 'CT'; "
-        "set title 'Fronts de Pareto - Approche Pareto (10 executions)'; "
+        "set title 'Fronts de Pareto - Approche Pareto (10 executions - 2000 iter max each)'; "
         "set autoscale; "
         "set offsets graph 0.05, 0.15, 0.05, 0.05; "
         "set key outside right; "
