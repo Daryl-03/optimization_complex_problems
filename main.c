@@ -38,7 +38,6 @@ void test_algorithmes(Instance *instance, int k, double n) {
     printf("Nombre d'iterations pour marche aleatoire (n): %.0f\n\n", n);
 
     // Tableau pour stocker les résultats
-    // 4 algorithmes × 2 opérations = 8 variantes
     const char* algo_names[] = {"Marche Aleatoire", "Climber First", "Climber Best", "Algo Perso"};
     const char* op_names[] = {"INSERTION", "ECHANGE"};
 
