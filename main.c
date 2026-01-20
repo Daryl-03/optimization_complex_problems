@@ -49,7 +49,7 @@ int launch_Optimization() {
 
 int main(void) {
 
-    srand(time(NULL));
+//    srand(time(NULL));
 
     // Question 5 : Filtrage Offline avec 500 solutions aleatoires
 //    question5();
@@ -58,7 +58,13 @@ int main(void) {
 //    question6();
 
     // Question 7 : Approche Scalaire avec analyse du pas
-    question7();
+//    question7();
+
+    // Question 8 : Approche Pareto sur 3 instances
+//    question8();
+
+    // Questions 10 & 11 : Analyse comparative avec hypervolume
+    question10_11();
 
     return 0;
 }

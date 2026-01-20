@@ -8,8 +8,11 @@
 #include "multivar.h"
 
 Instance *getInstance();
+Instance *getInstanceByName(const char *name);
 
 void question5();
 void question6();
 void question7();
+void question8();
+void question10_11();
 #endif //TP1_ANALYSE_H

@@ -51,6 +51,8 @@ Solution climber_best_ponder(Instance *instance, Operation op, double w1, double
 Solution *approche_scalaire(Instance *instance, ScalarizationParams params, int *size);
 Solution *approche_pareto(Instance *instance, ParetoParams params, int *size);
 
+double calculer_hypervolume(Solution *front, int taille, Cout reference);
+
 
 
 #endif //TP1_MULTIVAR_H

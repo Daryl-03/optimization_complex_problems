@@ -60,19 +60,22 @@ filtrage_offline(Instance *instance, Solution *solutions, int nombreDeSolutions,
     }
 
     exporter_solutions_gnuplot_flag(solutions, dominated, nombreDeSolutions, "solutions_offline.dat");
-    const char *gnuplot_cmd =
+    char gnuplot_cmd[2048];
+    sprintf(gnuplot_cmd,
             "gnuplot -p -e \""
             "set grid; "
             "set xlabel 'Cmax'; "
             "set ylabel 'CT'; "
-            "set title 'Solutions - Filtrage Offline'; "
+            "set title 'Solutions - Filtrage Offline - %d solutions'; "
             "set autoscale; "
             "set offsets graph 0.05, 0.05, 0.05, 0.05; "
             "set key outside right; "
             "plot 'solutions_offline.dat' using ($3==1 ? $1 : 1/0):($3==1 ? $2 : 1/0) "
             "with points pt 7 ps 1.5 lc rgb 'blue' title 'Dominated', "
             "'solutions_offline.dat' using ($3==0 ? $1 : 1/0):($3==0 ? $2 : 1/0) "
-            "with points pt 7 ps 1.5 lc rgb 'red' title 'Non-dominated'\"" ;
+            "with points pt 7 ps 1.5 lc rgb 'red' title 'Non-dominated'\"",
+            nombreDeSolutions);
+
 
 
     system(gnuplot_cmd);
@@ -129,12 +132,14 @@ filtrage_online(Instance *instance, Solution *solutions, int nombreDeSolutions, 
 
     fclose(logFile);
 
-    const char *gnuplot_cmd =
+    char gnuplot_cmd[2048];
+
+    sprintf(gnuplot_cmd,
             "gnuplot -p -e \""
             "set grid; "
             "set xlabel 'Cmax (Makespan)'; "
             "set ylabel 'CT (Total Completion Time)'; "
-            "set title 'Analyse du Front de Pareto'; "
+            "set title 'Analyse du Front de Pareto (%d solutions)'; "
 
             // Amélioration du Padding : 10% de marge sur chaque côté
             "set offsets graph 0.1, 0.1, 0.1, 0.1; "
@@ -152,7 +157,8 @@ filtrage_online(Instance *instance, Solution *solutions, int nombreDeSolutions, 
 
             // 2. On dessine le ROUGE (Flag 0) par-dessus, gros (ps 1.8)
             "'solutions_pareto.dat' using ($3==1 ? $1 : 1/0):($3==1 ? $2 : 1/0) "
-            "with points pt 7 ps 0.8 lc rgb 'red' title 'Front de Pareto final'\"";
+            "with points pt 7 ps 0.8 lc rgb 'red' title 'Front de Pareto final'\"",
+            nombreDeSolutions);
     system(gnuplot_cmd);
 
     return nonDominatedSolutions;
@@ -331,7 +337,7 @@ Solution *approche_pareto(Instance *instance, ParetoParams params, int *size) {
 
     const char *gnuplot_cmd =
             "gnuplot -p -e \""
-            "set terminal wxt;"
+//            "set terminal wxt;"
             "set grid; "
             "set xlabel 'Cmax (Makespan)'; "
             "set ylabel 'CT (Total Completion Time)'; "
@@ -395,4 +401,41 @@ Solution climber_best_ponder(Instance *instance, Operation op, double w1, double
     } while (notStuck);
 
     return solution_courante;
+}
+
+double calculer_hypervolume(Solution *front, int taille, Cout reference) {
+    if (taille == 0) return 0.0;
+
+    // 1. Trier le front par Cmax croissant
+    for (int i = 0; i < taille - 1; i++) {
+        for (int j = 0; j < taille - i - 1; j++) {
+            if (front[j].cout.cmax > front[j+1].cout.cmax) {
+                Solution temp = front[j];
+                front[j] = front[j+1];
+                front[j+1] = temp;
+            }
+        }
+    }
+
+    double hypervolume = 0.0;
+    double dernier_cmax = front[0].cout.cmax;
+
+    // 2. Calculer l'aire par "tranches" verticales
+    // On calcule l'aire entre le point de référence et le front
+    for (int i = 0; i < taille; i++) {
+        double largeur = reference.cmax - front[i].cout.cmax;
+        double hauteur;
+
+        if (i == 0) {
+            hauteur = reference.ct - front[i].cout.ct;
+        } else {
+            // Pour ne pas recompter ce qui est déjà sous le point précédent
+            hauteur = front[i-1].cout.ct - front[i].cout.ct;
+        }
+
+        // Aire du rectangle courant
+        hypervolume += (reference.cmax - front[i].cout.cmax) * hauteur;
+    }
+
+    return hypervolume;
 }

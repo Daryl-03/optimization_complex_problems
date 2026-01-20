@@ -4,6 +4,8 @@
 
 #include "utils.h"
 
+#define BASE_PATH "C:\\Users\\Naku\\Desktop\\Naku_desktop\\EILCO\\ING3\\problemes_complexes\\tp1\\instances\\"
+
 bool exporter_solutions_gnuplot(Solution *solutions, int nombreSolutions, const char *path) {
     FILE *f = fopen(path, "w");
     if (!f) {
@@ -35,12 +37,22 @@ bool exporter_solutions_gnuplot_flag(Solution *solutions, bool *dominated, int n
 
 
 Instance *getInstance() {
-    const char *basePath = "C:\\Users\\Naku\\Desktop\\Naku_desktop\\EILCO\\ING3\\problemes_complexes\\tp1\\instances\\";
 
-    char *fullPath = malloc(strlen(basePath) + 30 + 1);
-    strcpy(fullPath, basePath);
+    char *fullPath = malloc(strlen(BASE_PATH) + 30 + 1);
+    strcpy(fullPath, BASE_PATH);
 
     Instance *instance = read_instance(strcat(fullPath, "20_10_01.txt"));
+    free(fullPath);
+    return instance;
+}
+
+Instance *getInstanceByName(const char *name) {
+
+    char *fullPath = malloc(strlen(BASE_PATH) + strlen(name) + 1);
+    strcpy(fullPath, BASE_PATH);
+    strcat(fullPath, name);
+
+    Instance *instance = read_instance(fullPath);
     free(fullPath);
     return instance;
 }
